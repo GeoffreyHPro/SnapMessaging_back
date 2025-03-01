@@ -21,19 +21,18 @@ public class WebSocketEventListener {
 
     @EventListener
     public void handleWebSocketDisconnectListener(
-        SessionDisconnectEvent event
-    ){
+            SessionDisconnectEvent event) {
         StompHeaderAccessor headerAccessor = StompHeaderAccessor.wrap(event.getMessage());
         String username = (String) headerAccessor.getSessionAttributes().get("username");
-        if(username != null){
+        if (username != null) {
             log.info(username);
             var chatMessage = ChatMessage.builder()
-            .type(MessageType.LEAVE)
-            .sender(username)
-            .build();
+                    .type(MessageType.LEAVE)
+                    .sender(username)
+                    .build();
 
-            messageTemplate.convertAndSend("/topic/public",chatMessage);
+            messageTemplate.convertAndSend("/topic/public", chatMessage);
         }
     }
-    
+
 }

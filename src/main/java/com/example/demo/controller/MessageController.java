@@ -50,6 +50,13 @@ public class MessageController {
         return ResponseEntity.status(200).body(messageService.getAllMyMessages(authentication.getName()));
     }
 
+    @GetMapping(path = "/lastMessage")
+    public ResponseEntity getMyMessages(@RequestParam Integer otherUser) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        return ResponseEntity.status(200).body(messageService.getLastMessage(authentication.getName(), otherUser));
+    }
+
     @GetMapping(path = "/contact")
     public ResponseEntity getContacts() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

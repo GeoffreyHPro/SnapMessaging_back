@@ -34,11 +34,15 @@ public class MessageService {
 
     public List<Message> getConversationMessages(String email, Integer otherUser) {
         User user = (User) userService.loadUserByUsername(email);
-
         return customMessageRepositoryImpl.getMessagesFromConversation(user.getId(), otherUser);
     }
 
     public void saveMessage(String content, int userSender, int userReceiver) {
         customMessageRepositoryImpl.saveMessage(new Message(content, userSender, userReceiver));
+    }
+
+    public Message getLastMessage(String email, int idOtherUser) {
+        User user = (User) userService.loadUserByUsername(email);
+        return customMessageRepositoryImpl.getLastMessage(user.getId(), idOtherUser);
     }
 }

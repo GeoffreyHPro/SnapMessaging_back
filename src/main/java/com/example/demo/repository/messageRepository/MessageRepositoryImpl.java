@@ -48,13 +48,23 @@ public class MessageRepositoryImpl implements CustomMessageRepository {
     @Override
     public List<Integer> getContacts(int idUser) {
         TypedQuery<Integer> query = (TypedQuery<Integer>) this.em.createQuery(
-            "SELECT DISTINCT m.userReceiver AS contactId FROM Message m WHERE m.userSender = :id UNION SELECT DISTINCT m.userSender AS contactId FROM Message m WHERE m.userReceiver = :id");
-   
-            query.setParameter("id", idUser);
+                "SELECT DISTINCT m.userReceiver AS contactId FROM Message m WHERE m.userSender = :id UNION SELECT DISTINCT m.userSender AS contactId FROM Message m WHERE m.userReceiver = :id");
+
+        query.setParameter("id", idUser);
 
         List<Integer> listContacts = query.getResultList();
 
         return listContacts;
     }
 
+    @Override
+    public Message getLastMessage(int idUser, int idOtherUser) {
+        TypedQuery<Message> query = (TypedQuery<Message>) this.em.createQuery(
+                "SELECT m FROM Message m WHERE (m.userSender = : id AND m.userReceiver = :idOther) OR (m.userSender = : idOther AND m.userReceiver = :id) ORDER BY m.id DESC LIMIT 1");
+        query.setParameter("id", idUser);
+        query.setParameter("idOther", idOtherUser);
+        Message lastMessage = query.getSingleResult();
+
+        return lastMessage;
+    }
 }
